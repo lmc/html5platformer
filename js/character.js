@@ -2,10 +2,13 @@ var Character = Class.create({
   initialize: function(map,sprite_name){
     this.map = map;
     
-    this.x = 0;
-    this.y = 0;
+    this.coords = [0,0];
+    this.velocity = [0,0];
     
     this.selected = false;
+    
+    this.drawable_callback = function(canvas,screen_x,screen_y,renderer){
+    }
 
     this.sprite = {
       name:   sprite_name,
@@ -15,17 +18,14 @@ var Character = Class.create({
       offset_y: -35,
     };
   },
-  
-  /* {
-    x: 1,0,-1,
-    y: 1,0,-1
-  } */
   controller_input: function(input){
+    /*
     var new_position = this.position_to_move_to_for_input(input);
     if(this.can_move_to_position(new_position)){
       this.x = new_position.x;
       this.y = new_position.y;
     }
+    */
   },
   
   position_to_move_to_for_input: function(input){

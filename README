@@ -1,1 +1,10 @@
 Some isometric SRPG in HTML5 I guess. Please do not expect too much.
+
+TODO:
+  Animations (in order of priority)
+    Movement
+  Collision on tile edges
+  Vertical aspects to tiles (ie. vertical walls to show collision)
+  Height (2.5d)
+  AI (in order of priority)
+    Movement

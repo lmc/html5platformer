@@ -12,8 +12,6 @@ var Renderer = Class.create({
     }
     this.canvas = this.canvases.main;
     
-    this.angle = 270;
-    
     this.effects = [];
     this.selected_effect = null;
     this.selected_coordinates = [null,null];
@@ -30,8 +28,8 @@ var Renderer = Class.create({
     this.map_render_data = {
       offset_x: 480,
       offset_y: 360,
-      scale_x:  1.0,
-      scale_y:  -1.0
+      scale_x:  5.0,
+      scale_y:  5.0
     };
     
     this.sprites_path = 'images/';
@@ -65,77 +63,26 @@ var Renderer = Class.create({
   
   //TODO: occulusion, viewport cropping
   draw_map: function(){
-    if(this.angle == 90){
-      for(var i = 0; i < this.map.data.length; i++){
-        for(var j = 0; j < this.map.data[i].length; j++){
-          this.draw_map_tile(i,j);
-        }
-      }
-    }else if(this.angle == 180){
-      for(var i = this.map.data.length - 1; i > 0; i--){
-        for(var j = 0; j < this.map.data[i].length; j++){
-          this.draw_map_tile(i,j);
-        }
-      }
-    }else if(this.angle == 270){
-      for(var i = 0; i < this.map.data.length; i++){
-        for(var j = this.map.data[i].length - 1; j > 0; j--){
-          this.draw_map_tile(i,j);
-        }
-      }
-    }else{
-      for(var i = this.map.data.length - 1; i > 0; i--){
-        for(var j = this.map.data[i].length - 1; j > 0; j--){
-          this.draw_map_tile(i,j);
-        }
+    for(var i = 0; i < this.map.data.length; i++){
+      for(var j = 0; j < this.map.data[i].length; j++){
+        this.draw_map_tile(i,j);
       }
     }
   },
   
   draw_map_tile: function(map_x,map_y){
     var map_value = this.map.data[map_x][map_y];
-    var map_coords = this.map2canvas(map_x,map_y);
-    if(map_value.drawable()){
-      this.canvas.drawImage(this.sprites.ground,map_coords.x,map_coords.y);
+    var map_coords = this.map2canvas2(map_x,map_y);
+    if(map_value){
+      this.canvas.fillStyle = 'rgba(0,0,0,1.0)';
+      this.canvas.fillRect(map_coords.x,map_coords.y,map_coords.x2,map_coords.y2);
     }
-    //TODO: BENCHMARK: Faster to run a blank function, or check for valid function and run if possible?
-    //if(map_value.drawable_callback){
-      map_value.drawable_callback(this.canvas,map_coords.x,map_coords.y,this);
-    //}
-    //if(this.selected_coordinates[0] == map_x && this.selected_coordinates[1] == map_y){
-    //  this.canvas.drawImage(this.sprites.selected_shadow,map_coords.x,map_coords.y);
-    //}
   },
   
   draw_characters: function(){
     for(var i = 0; i < this.map.characters.length; i++){
       var character = this.map.characters[i];
-      var coords = this.map2canvas(character.x,character.y);
-      
-      var x = coords.x;
-      var y = coords.y;
-      
-      if(character.selected){
-        this.canvas.drawImage(this.sprites.selected_shadow,x,y);
-        this.draw_selected_effect(character);
-      }
-      
-      x += character.sprite.offset_x;
-      y += character.sprite.offset_y;
-      
-      this.canvas.drawImage(this.sprites[character.sprite.name],x,y);
     }
-  },
-  
-  draw_selected_effect: function(character){
-    if(!this.selected_effect){
-      this.selected_effect = this.create_effect();
-      this.selected_effect.sprite = this.load_sprite('particle');
-    }
-    this.selected_effect.set_origin(character);
-    
-    this.canvases.effects.clearRect(0,0,960,640);
-    this.selected_effect.blit(this.canvases.effects);
   },
   
   //TODO: Make it so it only blits when game state has changed?
@@ -150,22 +97,6 @@ var Renderer = Class.create({
     return 1000 / this.target_fps;
   },
   
-  rotate_camera: function(angle){
-    if(angle >= 0){
-      this.angle += 90;
-    }else{
-      this.angle -= 90;
-    }
-    
-    if(this.angle >= 360){
-      this.angle = 0;
-    }else if(this.angle < 0){
-      this.angle = 270;
-    }
-    
-    this.update_map_render_data_from_angle();
-  },
-  
   focus_camera: function(x,y,scroll_time){
     var to_offset = this.map2canvas(x,y);
     
@@ -176,41 +107,21 @@ var Renderer = Class.create({
     this.map_render_data.offset_y += (this.canvas_size.height / 2);
   },
   
-  
-  
-  map2canvas: function(map_x,map_y){
-    var x = (map_x - map_y) *  this.map.tile.height     ;
-    var y = (map_x + map_y) * (this.map.tile.height / 2);
-    
-    x *= this.map_render_data.scale_x;
-    y *= this.map_render_data.scale_y;
-    
-    x += this.map_render_data.offset_x;
-    y += this.map_render_data.offset_y;
-    
-    return {x: x, y: y};
+  map2canvas: function(x,y){
+    return {
+      x: x * this.map_render_data.scale_x,
+      y: y * this.map_render_data.scale_y
+    };
   },
   
-  update_map_render_data_from_angle: function(){
-    switch(this.angle){
-      case 90:
-        this.map_render_data.scale_x = -1.0;
-        this.map_render_data.scale_y = 1.0;
-        break;
-      case 180:
-        this.map_render_data.scale_x = -1.0;
-        this.map_render_data.scale_y = -1.0;
-        break;
-      case 270:
-        this.map_render_data.scale_x = 1.0;
-        this.map_render_data.scale_y = -1.0;
-        break;
-      case 0:
-      default:
-        this.map_render_data.scale_x = 1.0;
-        this.map_render_data.scale_y = 1.0;
-        break;
-    }
+  //also returns the bottom corner as x2,y2
+  map2canvas2: function(x,y){
+    return {
+      x:  x * this.map_render_data.scale_x,
+      y:  y * this.map_render_data.scale_y,
+      x2: (x + 1) * this.map_render_data.scale_x,
+      y2: (y + 1) * this.map_render_data.scale_y,
+    };
   }
   
 });

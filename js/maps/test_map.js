@@ -13,39 +13,18 @@ var TestMapLoader = Class.create(MapLoader,{
     for(var i = 0; i < map_data.length; i++){
       for(var j = 0; j < map_data[i].length; j++){
         
-        if(!map.data[i]) map.data[i] = [];
+        if(!map.data[j]) map.data[j] = [];
         
-        if(map_data[i][j]){
-          map.data[i][j] = new SolidMapBlock(map,i,j);
-          
-          /*
-          var character = new Character(map,'sprite');
-          character.x = i;
-          character.y = j;
-          map.characters.push(character);
-          */
-          
-        }else{
-          map.data[i][j] = new EmptyMapBlock(map,i,j);
-        }
-        
+        map.data[j][i] = map_data[i][j]; //NOTE: mind that we're flipping dimensions!
       }
     }
     
     map.data[3][3].drawable_callback = function(canvas,x,y,renderer){
-      canvas.fillStyle = 'rgba(255,64,64,0.5)';
-      canvas.fillRect(x,y,15,15);
     };
     
     var character = new Character(map,'sprite');
     character.x = 2;
     character.y = 2;
     map.characters.push(character);
-    /*
-    var character = new Character(map,'sprite');
-    character.x = 3;
-    character.y = 8;
-    map.characters.push(character);
-    */
   }
 });

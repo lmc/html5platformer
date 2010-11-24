@@ -4,8 +4,8 @@ var Map = Class.create({
     this.characters = [];
     
     this.tile = {
-      width:  54,
-      height: 26
+      width:  1,
+      height: 1
     };
   }
 });

@@ -21,15 +21,15 @@ var Renderer = Class.create({
     this.map = null;
     
     this.canvas_size = {
-      width:  960,
-      height: 640
+      width:  480,
+      height: 320
     };
     
     this.map_render_data = {
-      offset_x: 480,
-      offset_y: 360,
-      scale_x:  5.0,
-      scale_y:  5.0
+      offset_x: 0,
+      offset_y: 0,
+      scale_x:  1.0,
+      scale_y:  1.0
     };
     
     this.sprites_path = 'images/';
@@ -63,6 +63,7 @@ var Renderer = Class.create({
   
   //TODO: occulusion, viewport cropping
   draw_map: function(){
+    this.canvas.fillStyle = 'rgba(0,0,0,1.0)';
     for(var i = 0; i < this.map.data.length; i++){
       for(var j = 0; j < this.map.data[i].length; j++){
         this.draw_map_tile(i,j);
@@ -72,10 +73,8 @@ var Renderer = Class.create({
   
   draw_map_tile: function(map_x,map_y){
     var map_value = this.map.data[map_x][map_y];
-    var map_coords = this.map2canvas2(map_x,map_y);
     if(map_value){
-      this.canvas.fillStyle = 'rgba(0,0,0,1.0)';
-      this.canvas.fillRect(map_coords.x,map_coords.y,map_coords.x2,map_coords.y2);
+      this.canvas.fillRect(map_x,map_y,1,1);
     }
   },
   

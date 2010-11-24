@@ -83,8 +83,13 @@ var Engine = Class.create({
   },
   
   initialize_think: function(){
-    this.think_timer    = setInterval(this.think.bind(this),1000 / this.think_framerate);
-    this.renderer_timer = setInterval(this.renderer_think.bind(this),1000 / this.renderer_framerate);
+    if(false){
+      this.think_timer    = setInterval(this.think.bind(this),1000 / this.think_framerate);
+      this.renderer_timer = setInterval(this.renderer_think.bind(this),1000 / this.renderer_framerate);
+    }else{
+      this.think();
+      this.renderer_think();
+    }
   },
   
   think: function(){
@@ -92,8 +97,8 @@ var Engine = Class.create({
   },
   
   renderer_think: function(){
-    var selected_character = this.get_selected_character();
-    this.renderer.focus_camera(selected_character.x,selected_character.y);
+    //var selected_character = this.get_selected_character();
+    //this.renderer.focus_camera(selected_character.x,selected_character.y);
     
     this.renderer.blit();
   },
@@ -103,6 +108,7 @@ var Engine = Class.create({
   },
   
   set_selected_character: function(new_selected_character_index){
+    return;
     var character;
     if(character = this.get_selected_character()){
       character.selected = false;

@@ -11,7 +11,7 @@ var TestMapLoader = Class.create(MapLoader,{
 
         if(!map.data[x]) map.data[x] = [];
 
-        if(map_canvas_data[(y * 480 + x) * 4] == 0) {            
+        if(map_canvas_data[((y * 480 + x) * 4) + 3] >= 128) {            
           map.data[x][y] = 1;
         }else{
           map.data[x][y] = 0;

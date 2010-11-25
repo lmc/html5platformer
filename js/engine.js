@@ -18,6 +18,7 @@ var Engine = Class.create({
   
   initialize_map: function(map_loader_instance){
     this.map = new Map();
+    //TODO: Make sure this waits for the map image to load before being all hurf durf lets canvas
     map_loader_instance.load(this.map);
   },
   

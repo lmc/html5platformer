@@ -22,7 +22,8 @@ var Character = Class.create({
     
     this.max_velocity = 10.0;
     this.max_velocity_boost = 3.0
-    this.friction = 0.45;
+    this.friction_ground = 0.45;
+    this.friction_air = 0.1;
     this.gravity = -0.2;
   },
   
@@ -62,10 +63,10 @@ var Character = Class.create({
     var new_velocity;
     if(Math.abs(this.velocity[0]) > 0.0){
       if(this.velocity[0] > 0.0){
-        new_velocity = this.velocity[0] - this.friction;
+        new_velocity = this.velocity[0] - this.friction_ground;
         if(new_velocity < 0.0) new_velocity = 0.0;
       }else{
-        new_velocity = this.velocity[0] + this.friction;
+        new_velocity = this.velocity[0] + this.friction_ground;
         if(new_velocity > 0.0) new_velocity = 0.0;
       }
       this.velocity[0] = new_velocity;

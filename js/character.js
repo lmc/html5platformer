@@ -12,37 +12,56 @@ var Character = Class.create({
 
     this.sprite = {
       name:   sprite_name,
-      width:    50,
-      height:   55,
+      width:    1,
+      height:   7,
       offset_x: 0,
-      offset_y: -35,
+      offset_y: 0,
     };
+    
+    this.max_velocity = 10.0;
+    this.max_velocity_boost = 3.0
+    this.friction = 0.45;
+    this.gravity = 0.0;
   },
-  controller_input: function(input){
-    /*
-    var new_position = this.position_to_move_to_for_input(input);
-    if(this.can_move_to_position(new_position)){
-      this.x = new_position.x;
-      this.y = new_position.y;
+  
+  think: function(){
+    this.think_physics();
+  },
+  
+  think_physics: function(){
+    this.coords[0] += parseInt(this.velocity[0]);
+    this.coords[1] += parseInt(this.velocity[1]);
+    
+    var new_velocity;
+    if(Math.abs(this.velocity[0]) > 0.0){
+      if(this.velocity[0] > 0.0){
+        new_velocity = this.velocity[0] - this.friction;
+        if(new_velocity < 0.0) new_velocity = 0.0;
+      }else{
+        new_velocity = this.velocity[0] + this.friction;
+        if(new_velocity > 0.0) new_velocity = 0.0;
+      }
+      this.velocity[0] = new_velocity;
     }
-    */
+    
+    this.velocity[1] -= this.gravity;
+  },
+  
+  controller_input: function(input){
+    var velocity_boost = 1.0;
+    if(Math.abs(this.velocity[0]) < this.max_velocity_boost)
+      velocity_boost = this.max_velocity_boost - this.velocity[0];
+    
+    this.velocity[0] += input.x * velocity_boost;
+    this.velocity[1] += input.y;
+    
+    if(this.velocity[0] > this.max_velocity)
+      this.velocity[0] = this.max_velocity;
   },
   
   position_to_move_to_for_input: function(input){
-    var x = this.x;
-    var y = this.y;
-    
-    if(input.x){
-      x += input.x;
-    }
-    if(input.y){
-      y += input.y;
-    }
-    
-    return {x: x, y: y};
   },
   
   can_move_to_position: function(coords){
-    return this.map.data[coords.x] && this.map.data[coords.x][coords.y] && this.map.data[coords.x][coords.y].walkable();
   }
 });

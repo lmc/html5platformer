@@ -18,5 +18,9 @@ var TestMapLoader = Class.create(MapLoader,{
         }
       }
     }
+    
+    var character = new Character(map,'dude');
+    character.coords = [50,50];
+    map.characters.push(character);
   }
 });

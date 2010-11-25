@@ -61,7 +61,6 @@ var Renderer = Class.create({
     this.canvas.clearRect(0,0,960,640);
   },
   
-  //TODO: occulusion, viewport cropping
   draw_map: function(){
     this.canvas.fillStyle = 'rgba(0,0,0,1.0)';
     for(var i = 0; i < this.map.data.length; i++){
@@ -81,10 +80,10 @@ var Renderer = Class.create({
   draw_characters: function(){
     for(var i = 0; i < this.map.characters.length; i++){
       var character = this.map.characters[i];
+      this.canvas.drawImage(this.sprites[character.sprite.name],character.coords[0],character.coords[1]);
     }
   },
   
-  //TODO: Make it so it only blits when game state has changed?
   blit: function(){
     this.before_blit();
     this.draw_background();

@@ -19,6 +19,7 @@ var Renderer = Class.create({
     this.camera_focus_target = null; //OR {x: world_pos, y: world_pos}
     
     this.map = null;
+    this.map_image = null;
     
     this.canvas_size = {
       width:  480,
@@ -62,19 +63,7 @@ var Renderer = Class.create({
   },
   
   draw_map: function(){
-    this.canvas.fillStyle = 'rgba(0,0,0,1.0)';
-    for(var i = 0; i < this.map.data.length; i++){
-      for(var j = 0; j < this.map.data[i].length; j++){
-        this.draw_map_tile(i,j);
-      }
-    }
-  },
-  
-  draw_map_tile: function(map_x,map_y){
-    var map_value = this.map.data[map_x][map_y];
-    if(map_value){
-      this.canvas.fillRect(map_x,map_y,1,1);
-    }
+    this.canvas.drawImage(this.map_image,0,0);
   },
   
   draw_characters: function(){

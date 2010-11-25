@@ -29,6 +29,10 @@ var Engine = Class.create({
     this.renderer.map.characters.each(function(character){
       this.renderer.load_sprite(character.sprite.name);
     },this);
+    
+    console.log(this.map);
+    console.log(this.map.map_data);
+    this.renderer.map_image = this.map.map_data;
   },
   
   initialize_controls: function(){

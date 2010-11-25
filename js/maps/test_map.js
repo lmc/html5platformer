@@ -1,10 +1,10 @@
 var TestMapLoader = Class.create(MapLoader,{
   load: function(map){
 
-    var map_data = new Image;
-    map_data.src = 'images/map_test.png';
+    map.map_data = new Image;
+    map.map_data.src = 'images/map_test.png';
     var map_canvas = new Element('canvas',{width: 480,height: 320}).getContext('2d');
-    map_canvas.drawImage(map_data,0,0);
+    map_canvas.drawImage(map.map_data,0,0);
     map_canvas_data = map_canvas.getImageData(0,0,480,320).data;
     for(var x = 0; x < 480; x++){
       for(var y = 0; y < 320; y++){
